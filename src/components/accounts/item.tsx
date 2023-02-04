@@ -1,4 +1,5 @@
 import type { Account } from "../../../types";
+import { format } from "../../utils/currencyFormatter";
 import "./index.css";
 
 type Props = {
@@ -9,7 +10,7 @@ export const AccountItem = ({ account }: Props) => {
   return (
     <div className="account">
       <div className="total">Total {account.balance.amount.currency}</div>
-      <strong>{account.balance.amount.value}</strong>
+      <strong>{format(account.balance.amount.value)}</strong>
     </div>
   );
 };

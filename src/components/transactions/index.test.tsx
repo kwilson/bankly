@@ -64,7 +64,7 @@ describe("transaction history", () => {
 
     expect(screen.queryByTestId("loader")).toBeNull();
     expect(expensesTable).toBeInTheDocument();
-    expect(screen.getByText("-20.25")).toBeInTheDocument();
+    expect(screen.getByText("-£20.25")).toBeInTheDocument();
   });
 
   test("the expenses tab should show an error when the API call fails", async () => {
@@ -114,7 +114,7 @@ describe("transaction history", () => {
     expect(expensesTable).toBeInTheDocument();
     expect(incomeTable).not.toBeInTheDocument();
 
-    expect(screen.getByText("-20.25")).toBeInTheDocument();
+    expect(screen.getByText("-£20.25")).toBeInTheDocument();
 
     incomeTabTrigger.click();
 
