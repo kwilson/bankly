@@ -6,7 +6,9 @@ test("should render as expected", () => {
 
   expect(asFragment()).toMatchInlineSnapshot(`
 <DocumentFragment>
-  <div>
+  <div
+    data-testid="loader"
+  >
     Loading...
   </div>
 </DocumentFragment>

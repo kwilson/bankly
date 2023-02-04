@@ -1,8 +1,18 @@
 import { render, screen } from "@testing-library/react";
+import { rest } from "msw";
+
 import { TransactionHistory } from ".";
+import { server } from "../../../jest.setup";
+import { transactions } from "../../api/data/transactions";
 
 describe("transaction history", () => {
-  test("the expenses tab should be shown by default", () => {
+  test("the expenses tab should be shown by default when loading", async () => {
+    server.use(
+      rest.get("/api/transactions", (req, res, ctx) =>
+        res(ctx.status(200), ctx.json({}), ctx.delay("infinite"))
+      )
+    );
+
     render(<TransactionHistory />);
 
     expect(screen.getByText("Transaction History")).toBeInTheDocument();
@@ -13,10 +23,46 @@ describe("transaction history", () => {
 
     expect(expensesTabTrigger).toHaveAttribute("data-state", "active");
 
-    const expensesTable = screen.getByRole("table", {
+    const expensesTab = screen.getByRole("tabpanel", {
       name: "Expenses",
     });
 
+    expect(expensesTab).toHaveAttribute("aria-busy", "true");
+    expect(expensesTab).toHaveAttribute("aria-live", "polite");
+
+    expect(screen.getByTestId("loader")).toBeVisible();
+    expect(screen.queryByRole("table")).toBeNull();
+  });
+
+  test("the expenses tab should be shown by default when loaded", async () => {
+    server.use(
+      rest.get("/api/transactions", (req, res, ctx) =>
+        res(ctx.status(200), ctx.json(transactions))
+      )
+    );
+
+    render(<TransactionHistory />);
+
+    expect(screen.getByText("Transaction History")).toBeInTheDocument();
+
+    const expensesTabTrigger = screen.getByRole("tab", {
+      name: "Expenses",
+    });
+
+    expect(expensesTabTrigger).toHaveAttribute("data-state", "active");
+
+    const expensesTab = screen.getByRole("tabpanel", {
+      name: "Expenses",
+    });
+
+    const expensesTable = await screen.findByRole("table", {
+      name: "Expenses",
+    });
+
+    expect(expensesTab).toHaveAttribute("aria-busy", "false");
+    expect(expensesTab).toHaveAttribute("aria-live", "polite");
+
+    expect(screen.queryByTestId("loader")).toBeNull();
     expect(expensesTable).toBeInTheDocument();
     expect(screen.getByText("-20.25")).toBeInTheDocument();
   });

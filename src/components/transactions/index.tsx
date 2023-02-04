@@ -20,14 +20,24 @@ export const TransactionHistory = () => {
           <Tabs.Trigger value="income">Income</Tabs.Trigger>
         </Tabs.List>
 
-        <Tabs.Content className="TabsContent" value="expenses">
+        <Tabs.Content
+          aria-busy={isLoading}
+          aria-live="polite"
+          className="TabsContent"
+          value="expenses"
+        >
           <TransactionsList
             ariaLabel="Expenses"
             isLoading={isLoading}
             transactions={expenses}
           />
         </Tabs.Content>
-        <Tabs.Content className="TabsContent" value="income">
+        <Tabs.Content
+          aria-busy={isLoading}
+          aria-live="polite"
+          className="TabsContent"
+          value="income"
+        >
           <TransactionsList
             ariaLabel="Income"
             isLoading={isLoading}

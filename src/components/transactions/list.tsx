@@ -1,4 +1,5 @@
 import { Transaction as TransactionType } from "../../../types";
+import { Loading } from "../loading";
 import { Transaction } from "./item";
 
 interface TransactionsListProps {
@@ -12,9 +13,8 @@ export const TransactionsList = ({
   transactions,
   ariaLabel,
 }: TransactionsListProps) => {
-  if (isLoading || !transactions) {
-    // TODO: loading state
-    return null;
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
@@ -27,7 +27,7 @@ export const TransactionsList = ({
         </tr>
       </thead>
       <tbody>
-        {transactions.map((transaction) => (
+        {transactions?.map((transaction) => (
           <Transaction transaction={transaction} key={transaction.id} />
         ))}
       </tbody>

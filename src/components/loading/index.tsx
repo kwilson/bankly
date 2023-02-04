@@ -1,1 +1,1 @@
-export const Loading = () => <div>Loading...</div>;
+export const Loading = () => <div data-testid="loader">Loading...</div>;
