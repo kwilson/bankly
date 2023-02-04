@@ -6,6 +6,9 @@
   --primary-300: #88869f;
   --link: #646cff;
 
+  /* sizes */
+  --logo: 1.875rem;
+
   /* spacers */
   --spacer-small: 0.5rem;
   --spacer-medium: 1rem;
