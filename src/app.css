@@ -1,6 +1,18 @@
+.container {
+  margin: 0 auto;
+  max-width: 904px;
+  width: 90vw;
+}
+
+.app__header {
+  background: var(--background-900);
+  margin-bottom: var(--spacer-xxlarge);
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--background-800);
+}
+
 .app__row {
   display: flex;
-  margin-top: var(--spacer-medium);
   gap: var(--spacer-medium);
 }
 
