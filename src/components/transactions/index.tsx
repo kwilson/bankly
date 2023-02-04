@@ -2,65 +2,15 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useEffect, useMemo, useState } from "react";
 import { Transaction as TransactionType } from "../../../types";
 import "./index.css";
-import { Transaction } from "./item";
+import { TransactionsList } from "./list";
 
 const isExpense = (transaction: TransactionType) =>
   transaction.amount.value < 0;
 const isIncome = (transaction: TransactionType) => transaction.amount.value > 0;
 
-const Expenses = () => {
-  const { isLoading, income, expenses } = useTransactions();
-
-  if (isLoading || !expenses) {
-    // TODO: loading state
-    return null;
-  }
-
-  return (
-    <table aria-label="Expenses">
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Date</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        {expenses.map((transaction) => (
-          <Transaction transaction={transaction} key={transaction.id} />
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const Income = () => {
-  const { isLoading, income, expenses } = useTransactions();
-
-  if (isLoading || !income) {
-    // TODO: loading state
-    return null;
-  }
-
-  return (
-    <table aria-label="Income">
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Date</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        {income.map((transaction) => (
-          <Transaction transaction={transaction} key={transaction.id} />
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
 export const TransactionHistory = () => {
+  const { isLoading, income, expenses } = useTransactions();
+
   return (
     <>
       <h1 className="align-left">Transaction History</h1>
@@ -71,10 +21,18 @@ export const TransactionHistory = () => {
         </Tabs.List>
 
         <Tabs.Content className="TabsContent" value="expenses">
-          <Expenses />
+          <TransactionsList
+            ariaLabel="Expenses"
+            isLoading={isLoading}
+            transactions={expenses}
+          />
         </Tabs.Content>
         <Tabs.Content className="TabsContent" value="income">
-          <Income />
+          <TransactionsList
+            ariaLabel="Income"
+            isLoading={isLoading}
+            transactions={income}
+          />
         </Tabs.Content>
       </Tabs.Root>
     </>
