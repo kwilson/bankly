@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { rest } from "msw";
 
 import { TransactionHistory } from ".";
@@ -95,7 +95,13 @@ describe("transaction history", () => {
     expect(screen.queryByRole("table")).toBeNull();
   });
 
-  test.skip("changing between the expenses and income tabs should show different transactions", () => {
+  test("changing between the expenses and income tabs should show different transactions", async () => {
+    server.use(
+      rest.get("/api/transactions", (req, res, ctx) =>
+        res(ctx.status(200), ctx.json(transactions))
+      )
+    );
+
     render(<TransactionHistory />);
 
     const expensesTabTrigger = screen.getByRole("tab", {
@@ -104,9 +110,11 @@ describe("transaction history", () => {
     const incomeTabTrigger = screen.getByRole("tab", {
       name: "Income",
     });
-    const expensesTable = screen.getByRole("table", {
+
+    const expensesTable = await screen.findByRole("table", {
       name: "Expenses",
     });
+
     const incomeTable = screen.queryByRole("table", {
       name: "Income",
     });
@@ -116,10 +124,12 @@ describe("transaction history", () => {
 
     expect(screen.getByText("-£20.25")).toBeInTheDocument();
 
-    incomeTabTrigger.click();
+    // @radix-ui/react-tabs fires on mouse down rather than click
+    fireEvent.mouseDown(incomeTabTrigger);
 
     expect(incomeTabTrigger).toHaveAttribute("data-state", "active");
     expect(expensesTabTrigger).toHaveAttribute("data-state", "inactive");
-    expect(screen.queryByText("-20.25")).not.toBeInTheDocument();
+    expect(screen.queryByText("-£20.25")).not.toBeInTheDocument();
+    expect(screen.queryByText("£510.55")).toBeInTheDocument();
   });
 });
