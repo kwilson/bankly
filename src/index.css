@@ -5,6 +5,10 @@
   --primary-900: #ffffff;
   --primary-300: #88869f;
   --link: #646cff;
+  --button-inactive: #282834;
+
+  /* sizes */
+  --logo: 1.875rem;
 
   /* spacers */
   --spacer-small: 0.5rem;
@@ -16,7 +20,7 @@
   /* fonts */
   --font-small: 0.5rem;
   --font-medium: 1rem;
-  --font-large: 1.5rem;
+  --font-large: 1.375rem;
   --font-xlarge: 2rem;
   --font-xxlarge: 3rem;
 
@@ -27,14 +31,10 @@
   color: var(--primary-900);
   background-color: var(--background-900);
   font-synthesis: none;
-  width: 90vw;
-  max-width: 800px;
-  margin: auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
-  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -48,20 +48,21 @@ a:hover {
   color: var(--link);
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 1.5em;
+  line-height: 1.25;
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  border: 1px solid var(--button-inactive);
+  padding: var(--spacer-small) var(--spacer-large);
+  font-size: .875rem;
   font-weight: 500;
   font-family: inherit;
   background-color: var(--background-900);
@@ -82,6 +83,7 @@ button:focus-visible {
 button[data-state="active"] {
   --background-900: #d9d9d9;
   --primary-300: #000000;
+  border-color: transparent;
 }
 
 .align-left {

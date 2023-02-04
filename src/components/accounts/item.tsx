@@ -10,7 +10,7 @@ export const AccountItem = ({ account }: Props) => {
   return (
     <div className="account">
       <div className="total">Total {account.balance.amount.currency}</div>
-      <strong>
+      <strong className="value">
         {format(account.balance.amount.value, account.balance.amount.currency)}
       </strong>
     </div>
