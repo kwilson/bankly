@@ -9,7 +9,7 @@ describe("transaction history", () => {
   test("the expenses tab should be shown by default when loading", async () => {
     server.use(
       rest.get("/api/transactions", (req, res, ctx) =>
-        res(ctx.status(200), ctx.json({}), ctx.delay("infinite"))
+        res(ctx.status(200), ctx.json({}), ctx.delay())
       )
     );
 
