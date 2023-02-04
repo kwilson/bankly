@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
   gap: var(--spacer-medium);
+  margin-bottom: var(--spacer-xxlarge);
 }
 
 .account {
@@ -12,4 +13,12 @@
 
 .total {
   color: var(--primary-300);
+  line-height: 1.375;
+  margin-bottom: var(--spacer-small);
+}
+
+.value {
+  font-size: var(--font-large);
+  font-weight: 700;
+  line-height: 1.27;
 }
