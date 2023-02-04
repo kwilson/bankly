@@ -64,7 +64,7 @@ describe("transaction history", () => {
 
     expect(screen.queryByTestId("loader")).toBeNull();
     expect(expensesTable).toBeInTheDocument();
-    expect(screen.getByText("-£20.25")).toBeInTheDocument();
+    expect(screen.getByText("-€20.25")).toBeInTheDocument();
   });
 
   test("the expenses tab should show an error when the API call fails", async () => {
@@ -122,14 +122,14 @@ describe("transaction history", () => {
     expect(expensesTable).toBeInTheDocument();
     expect(incomeTable).not.toBeInTheDocument();
 
-    expect(screen.getByText("-£20.25")).toBeInTheDocument();
+    expect(screen.getByText("-€20.25")).toBeInTheDocument();
 
     // @radix-ui/react-tabs fires on mouse down rather than click
     fireEvent.mouseDown(incomeTabTrigger);
 
     expect(incomeTabTrigger).toHaveAttribute("data-state", "active");
     expect(expensesTabTrigger).toHaveAttribute("data-state", "inactive");
-    expect(screen.queryByText("-£20.25")).not.toBeInTheDocument();
+    expect(screen.queryByText("-€20.25")).not.toBeInTheDocument();
     expect(screen.queryByText("£510.55")).toBeInTheDocument();
   });
 });

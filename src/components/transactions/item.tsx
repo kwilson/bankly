@@ -23,7 +23,12 @@ export const Transaction = ({ transaction }: Props) => {
         <div>{formatDate(transaction.date)}</div>
       </td>
       <td className="transaction-amount">
-        <div className="amount">{formatCurrency(transaction.amount.value)}</div>
+        <div className="amount">
+          {formatCurrency(
+            transaction.amount.value,
+            transaction.amount.currency_iso
+          )}
+        </div>
       </td>
     </tr>
   );
