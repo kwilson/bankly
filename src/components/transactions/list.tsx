@@ -4,17 +4,27 @@ import { Transaction } from "./item";
 
 interface TransactionsListProps {
   ariaLabel?: string;
+  error?: string | false;
   isLoading?: boolean;
   transactions?: TransactionType[] | null;
 }
 
 export const TransactionsList = ({
+  ariaLabel,
+  error,
   isLoading,
   transactions,
-  ariaLabel,
 }: TransactionsListProps) => {
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div role="alert">
+        <p>{error}</p>
+      </div>
+    )
   }
 
   return (

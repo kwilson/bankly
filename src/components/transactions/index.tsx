@@ -8,8 +8,11 @@ const isExpense = (transaction: TransactionType) =>
   transaction.amount.value < 0;
 const isIncome = (transaction: TransactionType) => transaction.amount.value > 0;
 
+const genericError =
+  "Sorry, something went wrong when trying to load your transactions.";
+
 export const TransactionHistory = () => {
-  const { isLoading, income, expenses } = useTransactions();
+  const { isLoading, isError, income, expenses } = useTransactions();
 
   return (
     <>
@@ -28,6 +31,7 @@ export const TransactionHistory = () => {
         >
           <TransactionsList
             ariaLabel="Expenses"
+            error={isError && genericError}
             isLoading={isLoading}
             transactions={expenses}
           />
@@ -40,6 +44,7 @@ export const TransactionHistory = () => {
         >
           <TransactionsList
             ariaLabel="Income"
+            error={isError && genericError}
             isLoading={isLoading}
             transactions={income}
           />
@@ -51,6 +56,7 @@ export const TransactionHistory = () => {
 
 function useTransactions() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [transactions, setTransactions] = useState<TransactionType[] | null>(
     null
   );
@@ -80,6 +86,7 @@ function useTransactions() {
     }
 
     setIsLoading(true);
+    setIsError(false);
 
     fetch("/api/transactions")
       .then((response) => {
@@ -93,13 +100,12 @@ function useTransactions() {
         setTransactions(transactionsData);
       })
       .catch((e) => {
-        // TODO: log this error
-        console.error(e);
+        setIsError(true);
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, []);
 
-  return { income, expenses, isLoading };
+  return { income, expenses, isLoading, isError };
 }

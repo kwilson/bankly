@@ -67,6 +67,34 @@ describe("transaction history", () => {
     expect(screen.getByText("-20.25")).toBeInTheDocument();
   });
 
+  test("the expenses tab should show an error when the API call fails", async () => {
+    server.use(
+      rest.get("/api/transactions", (req, res, ctx) => res(ctx.status(500)))
+    );
+
+    render(<TransactionHistory />);
+
+    expect(screen.getByText("Transaction History")).toBeInTheDocument();
+
+    const expensesTabTrigger = screen.getByRole("tab", {
+      name: "Expenses",
+    });
+
+    expect(expensesTabTrigger).toHaveAttribute("data-state", "active");
+
+    const expensesTab = screen.getByRole("tabpanel", {
+      name: "Expenses",
+    });
+
+    expect(await screen.findByRole("alert")).toBeVisible();
+
+    expect(expensesTab).toHaveAttribute("aria-busy", "false");
+    expect(expensesTab).toHaveAttribute("aria-live", "polite");
+
+    expect(screen.queryByTestId("loader")).toBeNull();
+    expect(screen.queryByRole("table")).toBeNull();
+  });
+
   test.skip("changing between the expenses and income tabs should show different transactions", () => {
     render(<TransactionHistory />);
 
