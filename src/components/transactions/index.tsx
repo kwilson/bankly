@@ -1,13 +1,21 @@
 import * as Tabs from "@radix-ui/react-tabs";
+import { useEffect, useMemo, useState } from "react";
 import { Transaction as TransactionType } from "../../../types";
-import { transactions } from "../../api/data/transactions";
 import "./index.css";
 import { Transaction } from "./item";
 
-const isExpense = (transaction: TransactionType) => transaction.amount.value < 0;
+const isExpense = (transaction: TransactionType) =>
+  transaction.amount.value < 0;
 const isIncome = (transaction: TransactionType) => transaction.amount.value > 0;
 
 const Expenses = () => {
+  const { isLoading, income, expenses } = useTransactions();
+
+  if (isLoading || !expenses) {
+    // TODO: loading state
+    return null;
+  }
+
   return (
     <table aria-label="Expenses">
       <thead>
@@ -18,7 +26,7 @@ const Expenses = () => {
         </tr>
       </thead>
       <tbody>
-        {transactions.filter(isExpense).map((transaction) => (
+        {expenses.map((transaction) => (
           <Transaction transaction={transaction} key={transaction.id} />
         ))}
       </tbody>
@@ -27,6 +35,13 @@ const Expenses = () => {
 };
 
 const Income = () => {
+  const { isLoading, income, expenses } = useTransactions();
+
+  if (isLoading || !income) {
+    // TODO: loading state
+    return null;
+  }
+
   return (
     <table aria-label="Income">
       <thead>
@@ -37,7 +52,7 @@ const Income = () => {
         </tr>
       </thead>
       <tbody>
-        {transactions.filter(isIncome).map((transaction) => (
+        {income.map((transaction) => (
           <Transaction transaction={transaction} key={transaction.id} />
         ))}
       </tbody>
@@ -65,3 +80,58 @@ export const TransactionHistory = () => {
     </>
   );
 };
+
+function useTransactions() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [transactions, setTransactions] = useState<TransactionType[] | null>(
+    null
+  );
+
+  const income = useMemo(() => {
+    if (isLoading) {
+      return null;
+    }
+
+    return transactions?.filter(isIncome);
+  }, [isLoading, transactions]);
+
+  const expenses = useMemo(() => {
+    if (isLoading) {
+      return null;
+    }
+
+    return transactions?.filter(isExpense);
+  }, [isLoading, transactions]);
+
+  useEffect(() => {
+    // Stop reloading the transactions if they already exist.
+    // TODO: confirm if this is correct, or if data should always
+    // be refetched.
+    if (transactions) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    fetch("/api/transactions")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+
+        return response.json();
+      })
+      .then((transactionsData) => {
+        setTransactions(transactionsData);
+      })
+      .catch((e) => {
+        // TODO: log this error
+        console.error(e);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  return { income, expenses, isLoading };
+}
